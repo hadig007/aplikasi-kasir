@@ -34,6 +34,13 @@
           >
         </div>
         <div class="input">
+          <label for="">Model Item</label>
+          <input type="text" v-model="newItem.model" />
+          <span v-if="inputError.model === true"
+            >Model item tidak boleh kosong!</span
+          >
+        </div>
+        <div class="input">
           <label for="">Kategori Item</label>
           <select v-model="newItem.kategori">
             <option
@@ -122,14 +129,10 @@
             >Kode item tidak boleh kosong!</span
           >
         </div>
-        <div class="input" v-if="satuanDeskripsi === 'Sama'">
+        <div class="input">
           <label for="">Model Item</label>
-          <input type="number" v-model="newItem.model" />
-          <span v-if="inputError.kode === true"
-            >Kode item tidak boleh kosong!</span
-          >
+          <input type="text" v-model="newItem.model" />
         </div>
-
         <div class="input">
           <label for="">Kategori Item</label>
           <select v-model="newItem.kategori">
@@ -159,7 +162,7 @@
           <span v-if="inputError.brand === true">Merk item belum dipilih!</span>
         </div>
         <hr />
-        <div class="input">
+        <div class="input" v-if="satuanDeskripsi === 'Sama'">
           <label for="">Rak Item</label>
           <select v-model="newItem.rak">
             <option
@@ -197,7 +200,7 @@
         </div>
         <hr v-if="satuanDeskripsi === 'Berbeda'" />
         <p v-if="satuanDeskripsi === 'Berbeda'">
-          Deskripsi item {{ indexingItem }}
+          {{ descText }}
         </p>
         <!-- muncul jika deskrpsi tiap item berbeda maka -->
         <div class="iterasi" v-if="satuanDeskripsi === 'Berbeda'">
@@ -206,9 +209,33 @@
             <input type="number" v-model="newItem.kode" />
           </div>
           <div class="input">
-            <label for="">Model Item</label>
-            <input type="text" v-model="newItem.model" />
+            <label for="">Rak Item</label>
+            <select v-model="newItem.rak">
+              <option
+                v-for="(item, index) in allRacks"
+                :value="item"
+                :key="index"
+              >
+                {{ item }}
+              </option>
+            </select>
+            <span v-if="inputError.rak === true">Rak item belum dipilih!</span>
           </div>
+          <!-- <div class="input">
+          <label for="">Satuan Item</label>
+          <select v-model="newItem.satuan">
+            <option
+              v-for="(item, index) in allSatuan"
+              :value="item"
+              :key="index"
+            >
+              {{ item }}
+            </option>
+          </select>
+          <span v-if="inputError.merk === true"
+            >Kategori item belum dipilih!</span
+          >
+        </div> -->
           <div class="input">
             <label for="">Keterangan</label>
             <textarea v-model="newItem.keterangan"></textarea>
@@ -247,10 +274,11 @@ export default {
         kategori: "",
         brand: "",
         rak: "",
-        jumlah: 0,
+        jumlah: 1,
         model: "",
         keterangan: "",
         satuan: this.tahap,
+        description: [],
       },
       inputError: {
         nama: false,
@@ -262,23 +290,27 @@ export default {
       },
       allSatuan: [],
       err: false,
-      tahap: 22, // pilih satuan barang
+      tahap: 1, // pilih satuan barang
       satuanDeskripsi: "Sama", // secara default nilanya sama
-      indexingItem: 1,
-      someNewItem: [],
 
       // jika item tidak kosong munculkan dropdown nilainya sesuai jumlah item✔️
       // kasih warna berbeda untuk step ini
     };
   },
-  computed: {},
+  computed: {
+    descText() {
+      let jumlah = this.newItem.description.length;
+      jumlah += 1;
+      let text = "Deskripsi item " + jumlah;
+      if (this.newItem.description.length == this.newItem.jumlah) {
+        text = "Selesai";
+      }
+      return text;
+    },
+  },
   methods: {
     selesai() {
-      if (this.indexingItem !== this.newItem.jumlah) {
-        console.log("anda belum mengisi semua deskripsi");
-        return;
-      }
-      //
+      // pengecekan satuan item
       if (this.newItem.satuan === "Lusin") {
         this.newItem.jumlah = 12;
       }
@@ -292,7 +324,7 @@ export default {
         this.newItem.jumlah = 500;
       }
       console.log(
-        `==HASIL INPUTAN ITEM BARU== \nnama : ${this.newItem.nama}\nkode : ${this.newItem.kode}\nkategori : ${this.newItem.kategori}\nmerk : ${this.newItem.brand}\nrak : ${this.newItem.rak}\nketerangan : ${this.newItem.keterangan}\njumlah : ${this.newItem.jumlah}\n==========`
+        `==HASIL INPUTAN ITEM BARU== \nnama : ${this.newItem.nama}\nkode : ${this.newItem.kode}\nkategori : ${this.newItem.kategori}\nmerk : ${this.newItem.brand}\nrak : ${this.newItem.rak}\nketerangan : ${this.newItem.keterangan}\njumlah : ${this.newItem.jumlah}\ndescription : ${this.newItem.description}\n==========`
       );
       if (this.newItem.nama === "") {
         this.inputError.nama = true;
@@ -320,10 +352,24 @@ export default {
         this.showError();
         return;
       }
-      if(this.tahap==21){
+      // jika barangnya tunggal maka objenknya langsung ke store
+      if (this.tahap == 21) {
         this.$store.dispatch("addInventory", this.newItem);
-      }else{
-        this.$store.dispatch("addInventory", this.someNewItem);
+      }
+      // jika barangnya tidak tunggal maka akan di iterasi sebanyak jumlahnya
+      else {
+        // jika deskripsi itemnya sama maka akan dimasukkan ke store sebanyak jumlahnya
+        if (this.satuanDeskripsi === "Sama") {
+          this.$store.dispatch("addInventory", this.newItem);
+        }
+        // jika deskripsi itemnya sama maka akan dimasukkan ke store sebanyak jumlahnya
+        else {
+          if (this.newItem.description.length !== this.newItem.jumlah) {
+            console.log("anda belum mengisi semua deskripsi");
+            return;
+          }
+          this.$store.dispatch("addInventory", this.newItem);
+        }
       }
       this.$router.push("/inventaris");
     },
@@ -357,27 +403,36 @@ export default {
       if (this.newItem.satuan == "Rim") {
         this.newItem.jumlah = 500;
       }
-      if (this.indexingItem == (this.newItem.jumlah+1)) {
-        return;
+      if (this.newItem.description.length != this.newItem.jumlah) {
+        let toAdd = {
+          //   nama: this.newItem.nama,
+          //   kategori: this.newItem.kategori,
+          //   brand: this.newItem.brand,
+          //   satuan: this.newItem.satuan,
+          //   jumlah: this.newItem.jumlah,
+          //   model: this.newItem.model,
+          rak: this.newItem.rak,
+          kode: this.newItem.kode,
+          keterangan: this.newItem.keterangan,
+          indexItem: this.newItem.description.length,
+        };
+        this.newItem.description.push(toAdd);
+        console.log(this.newItem.description);
+        console.log(
+          "memasukkan item ke : " +
+            +this.newItem.description.length +
+            " dari jumlah " +
+            this.newItem.jumlah
+        );
+         if (this.newItem.description.length != this.newItem.jumlah){
+           this.newItem.kode = "";
+           this.newItem.rak = "";
+           this.newItem.keterangan = "";
+         }
       }
-      this.indexingItem++;
-      let toAdd = {
-        nama: this.newItem.nama,
-        kode: this.newItem.kode,
-        kategori: this.newItem.kategori,
-        brand: this.newItem.brand,
-        rak: this.newItem.rak,
-        jumlah: this.newItem.jumlah,
-        model: this.newItem.model,
-        keterangan: this.newItem.keterangan,
-        satuan: this.newItem.satuan,
-        indexItem: this.indexingItem,
-      };
-      this.someNewItem.push(toAdd);
-      console.log(this.someNewItem);
-      this.newItem.kode = "";
-      this.newItem.model = "";
-      this.newItem.keterangan = "";
+      if (this.newItem.description.length == this.newItem.jumlah) {
+        this.descText = "Selesai";
+      }
     },
   },
 };

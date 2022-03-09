@@ -22,7 +22,6 @@
               <th>Rak</th>
               <th>Jumlah</th>
               <th>Model</th>
-              <th>Warna</th>
               <th>Keterangan</th>
               <th>Aksi</th>
             </tr>
@@ -35,7 +34,6 @@
               <td>{{ inv.rak }}</td>
               <td>{{ inv.jumlah }}</td>
               <td>{{ inv.model }}</td>
-              <td>{{ inv.warna }}</td>
               <td>{{ inv.keterangan }}</td>
               <td><router-link to="/inventaris/edit_item">Edit Item</router-link></td>
             </tr>

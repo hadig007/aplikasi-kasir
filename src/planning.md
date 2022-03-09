@@ -27,5 +27,4 @@ done dengan pengecekan di method selesai✔️
 
 besok memasukkan some newitem ke store
 
-to fix
-1. cek kesiapan tiap deskripsi sebelum masuk ke item selanjutnya
+1. 

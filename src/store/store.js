@@ -12,9 +12,9 @@ const store = createStore({
           rak: "Rak 1",
           jumlah: 1,
           model: "a12",
-          warna: "Merah",
           keterangan: "Baik",
           satuan: "Tunggal",
+          description: []
         },
       ],
       allCategories: ["Hanphone", "Aksesoris", "Casing", "Baterai"],

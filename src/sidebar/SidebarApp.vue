@@ -1,6 +1,7 @@
 <template>
   <div class="sidebar">
     <h2>Nama Toko</h2>
+    <br>
     <ul>
       <li>
         <svg
@@ -117,10 +118,12 @@ ul li {
 li a {
     color: white;
     text-decoration: none;
+    margin: 0 1rem;
 }
 svg {
   color: white;
   margin-right: .5rem;
   width: 20px;
 }
+
 </style>

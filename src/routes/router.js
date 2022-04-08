@@ -18,7 +18,7 @@ const router = createRouter({
         { path : '/dashboard', component : Dashboard},
         { path : '/inventaris', component : Inventaris,name : 'inventaris', children: [
             { path : 'tambah_item', component : TambahItem},
-            { path : 'edit_item', component : EditItem},
+            { path : 'edit_item/:id', component : EditItem, name : "edit_item"},
         ]},
         { path : '/laporan', component : Laporan},
         { path : '/profil', component : Profil},

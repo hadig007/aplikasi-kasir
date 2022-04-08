@@ -12,7 +12,7 @@
 body{
     margin: 0;
 }
-h1{
+h1,h2,h3,h4{
     margin: 0;
 }
 li{
@@ -29,16 +29,20 @@ td,th{
 tr{
     margin:  0.3rem;
 }
+hr{
+    width: 100%;
+}
 label{
-    font-size: .8rem;
+    font-size: 1rem;
     color: #2c3333b9;
+    margin: .2rem 0;
 }
 input, textarea{
     border: solid rgb(231, 231, 231) 1px;
     background-color: #b4cfcf54;
     border-radius: 4px;
     font-size: 1.1rem;
-    padding: .2rem .5rem;
+    padding: .5rem 1rem;
     /* width: 300px; */
 }
 select{
@@ -47,7 +51,6 @@ select{
     border-radius: 4px;
     font-size: 1.1rem;
     padding: .2rem .5rem;
-    width: 300px;
 }
 button{
     width: 40%;

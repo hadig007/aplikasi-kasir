@@ -9,6 +9,8 @@
     2. deskripsi item -> tahap tunggal atau non tunggal
     3. deskripsi peritem/ jika bukan 1 -->
     <div class="form">
+      <h2 v-if="tahap != 1">Masukkan informasi item</h2>
+      <hr v-if="tahap != 1" />
       <div class="tahap-1" v-if="tahap == 1">
         <h5>Pilih satuan item yang akan dimasukkan</h5>
         <div class="button-group">
@@ -22,23 +24,14 @@
         <div class="input">
           <label for="">Nama Item</label>
           <input type="text" v-model="newItem.nama" />
-          <span v-if="inputError.nama === true"
-            >Nama item tidak boleh kosong!</span
-          >
         </div>
         <div class="input">
           <label for="">Kode Item</label>
           <input type="number" v-model="newItem.kode" />
-          <span v-if="inputError.kode === true"
-            >Kode item tidak boleh kosong!</span
-          >
         </div>
         <div class="input">
           <label for="">Model Item</label>
           <input type="text" v-model="newItem.model" />
-          <span v-if="inputError.model === true"
-            >Model item tidak boleh kosong!</span
-          >
         </div>
         <div class="input">
           <label for="">Kategori Item</label>
@@ -51,9 +44,6 @@
               {{ item }}
             </option>
           </select>
-          <span v-if="inputError.merk === true"
-            >Kategori item belum dipilih!</span
-          >
         </div>
         <div class="input">
           <label for="">Merk Item</label>
@@ -66,7 +56,6 @@
               {{ item }}
             </option>
           </select>
-          <span v-if="inputError.brand === true">Merk item belum dipilih!</span>
         </div>
         <div class="input">
           <label for="">Rak Item</label>
@@ -79,13 +68,11 @@
               {{ item }}
             </option>
           </select>
-          <span v-if="inputError.rak === true">Rak item belum dipilih!</span>
         </div>
         <div class="input">
           <label for="">Keterangan</label>
           <textarea v-model="newItem.keterangan"></textarea>
         </div>
-
         <div class="button-group">
           <button class="btn-batal" @click="batal">Batal</button>
           <button class="btn-selesai" @click="selesai">Selesai</button>
@@ -118,16 +105,10 @@
         <div class="input">
           <label for="">Nama Item</label>
           <input type="text" v-model="newItem.nama" />
-          <span v-if="inputError.nama === true"
-            >Nama item tidak boleh kosong!</span
-          >
         </div>
         <div class="input" v-if="satuanDeskripsi === 'Sama'">
           <label for="">Kode Item</label>
           <input type="number" v-model="newItem.kode" />
-          <span v-if="inputError.kode === true"
-            >Kode item tidak boleh kosong!</span
-          >
         </div>
         <div class="input">
           <label for="">Model Item</label>
@@ -144,9 +125,6 @@
               {{ item }}
             </option>
           </select>
-          <span v-if="inputError.merk === true"
-            >Kategori item belum dipilih!</span
-          >
         </div>
         <div class="input">
           <label for="">Merk Item</label>
@@ -159,7 +137,6 @@
               {{ item }}
             </option>
           </select>
-          <span v-if="inputError.brand === true">Merk item belum dipilih!</span>
         </div>
         <hr />
         <div class="input" v-if="satuanDeskripsi === 'Sama'">
@@ -173,7 +150,6 @@
               {{ item }}
             </option>
           </select>
-          <span v-if="inputError.rak === true">Rak item belum dipilih!</span>
         </div>
         <div class="input">
           <label for="">Satuan Item</label>
@@ -186,9 +162,6 @@
               {{ item }}
             </option>
           </select>
-          <span v-if="inputError.merk === true"
-            >Kategori item belum dipilih!</span
-          >
         </div>
         <div class="input" v-if="newItem.satuan === 'Lainnya'">
           <label for="">Jumlah</label>
@@ -219,7 +192,6 @@
                 {{ item }}
               </option>
             </select>
-            <span v-if="inputError.rak === true">Rak item belum dipilih!</span>
           </div>
           <!-- <div class="input">
           <label for="">Satuan Item</label>
@@ -232,9 +204,6 @@
               {{ item }}
             </option>
           </select>
-          <span v-if="inputError.merk === true"
-            >Kategori item belum dipilih!</span
-          >
         </div> -->
           <div class="input">
             <label for="">Keterangan</label>
@@ -262,6 +231,7 @@ export default {
     this.allBrands = this.$store.state.allBrands;
     this.allRacks = this.$store.state.allRacks;
     this.allSatuan = this.$store.state.allSatuan;
+    this.lastId = this.$store.state.allInventory.length
   },
   data() {
     return {
@@ -290,6 +260,7 @@ export default {
       },
       allSatuan: [],
       err: false,
+      lastId:undefined,
       tahap: 1, // pilih satuan barang
       satuanDeskripsi: "Sama", // secara default nilanya sama
 
@@ -326,32 +297,26 @@ export default {
       console.log(
         `==HASIL INPUTAN ITEM BARU== \nnama : ${this.newItem.nama}\nkode : ${this.newItem.kode}\nkategori : ${this.newItem.kategori}\nmerk : ${this.newItem.brand}\nrak : ${this.newItem.rak}\nketerangan : ${this.newItem.keterangan}\njumlah : ${this.newItem.jumlah}\ndescription : ${this.newItem.description}\n==========`
       );
-      if (this.newItem.nama === "") {
-        this.inputError.nama = true;
-        this.inputError.allInput = true;
-        this.showError();
-        return;
-      } else if (this.newItem.kode === "") {
-        this.inputError.kode = true;
-        this.inputError.allInput = true;
-        this.showError();
-        return;
-      } else if (this.newItem.kategori == "") {
-        this.inputError.kategori = true;
-        this.inputError.allInput = true;
-        this.showError();
-        return;
-      } else if (this.newItem.brand == "") {
-        this.inputError.brand = true;
-        this.inputError.allInput = true;
-        this.showError();
-        return;
-      } else if (this.newItem.rak == "") {
-        this.inputError.rak = true;
-        this.inputError.allInput = true;
-        this.showError();
+      if(this.tahap==22 && this.newItem.jumlah<=1){
+        this.err = true
+        return
+      }
+      if (
+        this.newItem.nama === "" ||
+        this.newItem.kode === "" ||
+        this.newItem.kategori == "" ||
+        this.newItem.brand == "" ||
+        this.newItem.jumlah == "" ||
+        this.newItem.rak == ""
+      ) {
+        this.err = true;
         return;
       }
+      // generate id baru
+      let genId = Math.ceil(Math.random()*9999)
+      let id = `ID${genId}`
+      console.log(id) 
+      this.newItem.id = this.lastId+1
       // jika barangnya tunggal maka objenknya langsung ke store
       if (this.tahap == 21) {
         this.$store.dispatch("addInventory", this.newItem);
@@ -381,14 +346,6 @@ export default {
     },
     nontunggal() {
       this.tahap = 22;
-    },
-    showError() {
-      if (this.inputError.allInput === true) {
-        this.err = true;
-        setTimeout(() => {
-          this.err = false;
-        }, 1000);
-      }
     },
     selanjutnya() {
       if (this.newItem.satuan === "Lusin") {
@@ -424,11 +381,11 @@ export default {
             " dari jumlah " +
             this.newItem.jumlah
         );
-         if (this.newItem.description.length != this.newItem.jumlah){
-           this.newItem.kode = "";
-           this.newItem.rak = "";
-           this.newItem.keterangan = "";
-         }
+        if (this.newItem.description.length != this.newItem.jumlah) {
+          this.newItem.kode = "";
+          this.newItem.rak = "";
+          this.newItem.keterangan = "";
+        }
       }
       if (this.newItem.description.length == this.newItem.jumlah) {
         this.descText = "Selesai";
@@ -444,12 +401,14 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  /* height: 95vh; */
 }
 .form {
   background-color: rgb(255, 255, 255);
-  padding: 1rem;
+  padding: 2rem;
   box-shadow: 0 0 5px 0.5px rgba(0, 0, 0, 0.1);
   border-radius: 4px;
+  width: 50%;
 }
 .input {
   display: flex;
@@ -505,5 +464,8 @@ export default {
   background-color: rgba(71, 124, 124, 0.534);
   width: 100%;
   margin: 0 auto;
+}
+select {
+  width: 100%;
 }
 </style>

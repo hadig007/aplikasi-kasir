@@ -1,7 +1,7 @@
 <template>
   <div>
-    <Sidebar/>
-    <router-view></router-view>
+    <Sidebar class="sidebar"/>
+    <router-view class="main"></router-view>
   </div>
 </template>
 
@@ -16,8 +16,19 @@ export default {
 </script>
 
 <style scoped>
-div{
+/* div{
   display: grid;
   grid-template-columns: 25% 75%;
+} */
+div{
+  display: flex;
+  flex-direction: row;
+}
+.sidebar{
+  flex-basis: 20%;
+}
+.main{
+  flex-basis: 80%;
+  max-height: 100vh;
 }
 </style>

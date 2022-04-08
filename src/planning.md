@@ -109,3 +109,4 @@ munculkan deskripsi tiap item yang bukan tunggal -> hanya memasukkan 1 item ke d
 //
 
 melakukan edit item
+1. edit item tunggal

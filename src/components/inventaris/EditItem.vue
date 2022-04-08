@@ -21,7 +21,7 @@
       <div class="input">
         <label for="">Kategori Item</label>
         <select v-model="item.kategori">
-          <option v-for="(item, index) in item" :value="item" :key="index">
+          <option v-for="(item, index) in allCategories" :value="item" :key="index">
             {{ item }}
           </option>
         </select>
@@ -198,9 +198,31 @@ export default {
   },
   computed: {
     descText() {
+      let all = 0
+      if(this.descItem.length==undefined){
+        if (this.item.satuan === "Lusin") {
+          all = 12;
+        }
+        if (this.item.satuan == "Gross") {
+          all = 20;
+        }
+        if (this.item.satuan == "Kodi") {
+          all = 144;
+        }
+        if (this.item.satuan == "Rim") {
+          all = 500;
+        }
+        let jumlah = this.itemIndex
+      jumlah += 1;
+      let text = "Deskripsi item " + jumlah + " dari " + all;
+      if (this.descItem == this.item.jumlah) {
+        text = "Selesai";
+      }
+      return text;
+      }
       let jumlah = this.itemIndex
       jumlah += 1;
-      let text = "Deskripsi item " + jumlah;
+      let text = "Deskripsi item " + jumlah + " dari " + this.descItem.length;
       if (this.descItem == this.item.jumlah) {
         text = "Selesai";
       }
@@ -235,6 +257,7 @@ export default {
       this.itemToShow = this.descItem[this.itemIndex];
     },
     batal() {
+      console.log('kembali, dan semua perubahan dihilangkan')
       this.$router.push("/inventaris");
     },
     selesai() {
